@@ -1,7 +1,7 @@
 #!perl -w
 use strict;
 use Test::More;
-use HTTP::Parser::XS qw(:all);
+use PicoHttpParser::XS qw/:all/;
 
 plan skip_all => 'PP has no static limitations'
     if $HTTP::Parser::XS::BACKEND eq 'pp';
@@ -19,7 +19,7 @@ my $request = "GET / HTTP/1.1" . $crlf
             . $crlf;
 
 my $env = {};
-my $ret = parse_http_request($request, $env);
+my $ret = parse_request($request, $env);
 cmp_ok $ret, '>', 0, 'parsing status (success)';
 is $env->{REQUEST_METHOD}, 'GET';
 is $env->{'HTTP_' . uc $name}, 42, 'very long name';
@@ -31,7 +31,7 @@ $request = "GET / HTTP/1.1" . $crlf
           . $crlf;
 
 $env = {};
-$ret = parse_http_request($request, $env);
+$ret = parse_request($request, $env);
 cmp_ok $ret, '==', -1, 'parsing status (fail)';
 is $env->{REQUEST_METHOD}, undef;
 is $env->{'HTTP_' . uc $name}, undef, 'too long name';
@@ -43,7 +43,7 @@ $request = "GET / HTTP/1.1" . $crlf
           . $crlf;
 
 $env = {};
-$ret = parse_http_request($request, $env);
+$ret = parse_request($request, $env);
 is $ret, -1, 'too many headers';
 
 note 'response parser';
@@ -53,7 +53,7 @@ my $response = 'HTTP/1.1 200 OK' . $crlf
              . "$name: 42" . $crlf
              . $crlf;
 ($ret, my $minor_version, my $status, my $message, my $headers)
-    = parse_http_response($response, HEADERS_AS_HASHREF);
+    = parse_response($response, HEADERS_AS_HASHREF);
 
 cmp_ok $ret, '>', 0, 'parsing status (success)';
 is $minor_version, 1;
@@ -68,7 +68,7 @@ $response = 'HTTP/1.1 200 OK' . $crlf
              . "foo: bar" . $crlf
              . $crlf;
 ($ret, $minor_version, $status, $message, $headers)
-    = parse_http_response($response, HEADERS_AS_HASHREF);
+    = parse_response($response, HEADERS_AS_HASHREF);
 
 cmp_ok $ret, '>', -1, 'parsing status (fail)';
 is_deeply $headers, { foo => 'bar' }, 'too long name is ignored'
@@ -79,9 +79,8 @@ $response = 'HTTP/1.1 200 OK' . $crlf
             . join($crlf, map { "X$_: $_" } 0 .. $MAX_HEADERS) . $crlf
             . "foo: bar" . $crlf
             . $crlf;
-($ret) = parse_http_response($response, HEADERS_AS_HASHREF);
+($ret) = parse_response($response, HEADERS_AS_HASHREF);
 is $ret, -1, 'too many headers (fail)';
 
 
 done_testing;
-

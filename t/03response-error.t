@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
-use HTTP::Parser::XS qw/:all/;
+use PicoHttpParser::XS qw/:all/;
 
 use Data::Dumper;
 
@@ -50,10 +50,9 @@ while (@tests) {
     $header =~ s/^\n//;
     last unless $expect;
     my $res  = [];
-    my ($ret) = parse_http_response($header, HEADERS_AS_HASHREF);
+    my ($ret) = parse_response($header, HEADERS_AS_HASHREF);
     my $r    = eval($expect);
     is( $ret, $r, "test-$i");
 }
 
 done_testing;
-

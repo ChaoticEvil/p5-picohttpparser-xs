@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Test::More;
-use HTTP::Parser::XS qw/:all/;
+use PicoHttpParser::XS qw/:all/;
 
 my $tests = <<'__HEADERS';
 HTTP/1.0 200 OK
@@ -138,4 +138,3 @@ sub parse_it {
         return undef;
     }
 }
-

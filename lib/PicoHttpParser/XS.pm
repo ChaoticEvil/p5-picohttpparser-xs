@@ -4,17 +4,15 @@ use 5.024000;
 use strict;
 use warnings;
 
-require Exporter;
-
-our @ISA = qw(Exporter);
-
-our @EXPORT_OK = qw(
+use parent 'Exporter';
+our %EXPORT_TAGS = ( 'all' => [ qw(
     parse_request
     parse_response
     HEADERS_NONE
     HEADERS_AS_HASHREF
     HEADERS_AS_ARRAYREF
-);
+) ] );
+our @EXPORT_OK   = ( @{ $EXPORT_TAGS{'all'} } );
 
 our $VERSION = '0.1.0';
 

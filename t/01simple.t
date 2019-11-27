@@ -1,20 +1,20 @@
 use Test::More tests => 19;
 
-use HTTP::Parser::XS qw(parse_http_request);
+use PicoHttpParser::XS qw(parse_request);
 
 my $req;
 my %env;
 
 undef $@;
 eval {
-    parse_http_request("GET / HTTP/1.0\r\n\r\n", '');
+    parse_request("GET / HTTP/1.0\r\n\r\n", '');
 };
 ok($@, '"croak if second param is not a hashref');
 undef $@;
 
 $req = "GET /abc?x=%79 HTTP/1.0\r\n\r\n";
 %env = ();
-is(parse_http_request($req, \%env), length($req), 'simple get');
+is(parse_request($req, \%env), length($req), 'simple get');
 is_deeply(\%env, {
     PATH_INFO       => '/abc',
     QUERY_STRING    => 'x=%79',
@@ -33,7 +33,7 @@ User-Agent: hoge\r
 \r
 EOT
 %env = ();
-is(parse_http_request($req, \%env), length($req), 'POST');
+is(parse_request($req, \%env), length($req), 'POST');
 is_deeply(\%env, {
     CONTENT_LENGTH  => 15,
     CONTENT_TYPE    => 'text/plain',
@@ -57,7 +57,7 @@ Foo: fgh\r
 \r
 EOT
 %env = ();
-is(parse_http_request($req, \%env), length($req), 'multiline header');
+is(parse_request($req, \%env), length($req), 'multiline header');
 is_deeply(\%env, {
     HTTP_FOO        => ',   abc de, fgh',
     PATH_INFO       => '/',
@@ -73,7 +73,7 @@ GET /a%20b HTTP/1.0\r
 \r
 EOT
 %env = ();
-is(parse_http_request($req, \%env), length($req), 'url-encoded');
+is(parse_request($req, \%env), length($req), 'url-encoded');
 is_deeply(\%env, {
     PATH_INFO      => '/a b',
     REQUEST_METHOD => 'GET',
@@ -88,7 +88,7 @@ GET /a%2zb HTTP/1.0\r
 \r
 EOT
 %env = ();
-is(parse_http_request($req, \%env), -1, 'invalid char in url-encoded path');
+is(parse_request($req, \%env), -1, 'invalid char in url-encoded path');
 is_deeply(\%env, {});
 
 $req = <<"EOT";
@@ -96,7 +96,7 @@ GET /a%2 HTTP/1.0\r
 \r
 EOT
 %env = ();
-is(parse_http_request($req, \%env), -1, 'partially url-encoded');
+is(parse_request($req, \%env), -1, 'partially url-encoded');
 is_deeply(\%env, {});
 
 # dumb HTTP client: https://github.com/miyagawa/Plack/issues/213
@@ -105,7 +105,7 @@ GET /a/b#c HTTP/1.0\r
 \r
 EOT
 %env = ();
-is(parse_http_request($req, \%env), length($req), 'URI fragment');
+is(parse_request($req, \%env), length($req), 'URI fragment');
 is_deeply(\%env, {
     SCRIPT_NAME => '',
     PATH_INFO   => '/a/b',
@@ -121,7 +121,7 @@ GET /a/b%23c HTTP/1.0\r
 \r
 EOT
 %env = ();
-is(parse_http_request($req, \%env), length($req), '%23 -> #');
+is(parse_request($req, \%env), length($req), '%23 -> #');
 is_deeply(\%env, {
     SCRIPT_NAME => '',
     PATH_INFO   => '/a/b#c',
@@ -137,7 +137,7 @@ GET /a/b?c=d#e HTTP/1.0\r
 \r
 EOT
 %env = ();
-is(parse_http_request($req, \%env), length($req), 'URI fragment after query string');
+is(parse_request($req, \%env), length($req), 'URI fragment after query string');
 is_deeply(\%env, {
     SCRIPT_NAME => '',
     PATH_INFO   => '/a/b',

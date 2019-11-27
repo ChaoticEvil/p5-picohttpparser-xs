@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use Test::More;
 use Data::Dumper;
-use HTTP::Parser::XS qw/:all/;
+use PicoHttpParser::XS qw/:all/;
 
 my %formats = (
     HEADERS_NONE()         => "NONE",
@@ -80,13 +80,13 @@ while (@tests) {
     my $r   = eval($expect);
 
     for my $format (0..2) {
-        my @a = parse_http_response($header, $format);
+        my @a = parse_response($header, $format);
         my $headers = pop @a;
 
         is_deeply( \@a, $r->{ret}, 'test-' . $i) or diag(explain(\@a));
         is_deeply(
             $headers,
-            $r->{ "HEADER_AS_". $formats{$format} }, 
+            $r->{ "HEADER_AS_". $formats{$format} },
             'test-format-'. $formats{$format} . "-" .$i
         ) or diag(explain($headers))
     }
@@ -94,4 +94,3 @@ while (@tests) {
 }
 
 done_testing;
-
