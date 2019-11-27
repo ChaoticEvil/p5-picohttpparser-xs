@@ -4,11 +4,14 @@ PicoHttpParser::XS - ...
 
 ## Changes to HTTP::Parser::XS
 
-* Replace build system (to simple h2xs, instead excess Module::Install)
-* Remove C macros for WIN32 copability
-* Rename long names of methods (parse\_http\_request -> parse\_request, parse\_http\_response -> parse\_response)
-* Update picohttpparser code (sync to git master)
-...
+* Removed C macros for WIN32 copability
+* Removed boilerplate to old p5 versions copability (pport.h)
+* Updated picohttpparser code (sync to git master)
+* Renamed long names of methods (parse\_http\_request -> parse\_request, parse\_http\_response -> parse\_response)
+* Replaced build system (to simple h2xs, instead excess Module::Install)
+* Wrote more tests
+* Up minimum p5 version (5.8.0 -> 5.24.0)
+* C code modified with K&R (1TBS) indententional style
 
 ## Installation
 
