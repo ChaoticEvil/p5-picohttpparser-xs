@@ -1,16 +1,17 @@
-use Test::More tests => 19;
+use strict;
+use warnings;
 
-use PicoHttpParser::XS qw(parse_request);
+use Test::More 'no_plan';
+
+use PicoHttpParser::XS qw( parse_request );
 
 my $req;
 my %env;
 
-undef $@;
 eval {
     parse_request("GET / HTTP/1.0\r\n\r\n", '');
 };
-ok($@, '"croak if second param is not a hashref');
-undef $@;
+ok($@, 'croak if second param is not a hashref');
 
 $req = "GET /abc?x=%79 HTTP/1.0\r\n\r\n";
 %env = ();
@@ -81,7 +82,7 @@ is_deeply(\%env, {
     QUERY_STRING   => '',
     SCRIPT_NAME     => '',
     SERVER_PROTOCOL => 'HTTP/1.0',
-});
+}, 'expected parsed url');
 
 $req = <<"EOT";
 GET /a%2zb HTTP/1.0\r
@@ -89,7 +90,7 @@ GET /a%2zb HTTP/1.0\r
 EOT
 %env = ();
 is(parse_request($req, \%env), -1, 'invalid char in url-encoded path');
-is_deeply(\%env, {});
+is_deeply(\%env, {}, 'empty parsed url');
 
 $req = <<"EOT";
 GET /a%2 HTTP/1.0\r
@@ -97,7 +98,7 @@ GET /a%2 HTTP/1.0\r
 EOT
 %env = ();
 is(parse_request($req, \%env), -1, 'partially url-encoded');
-is_deeply(\%env, {});
+is_deeply(\%env, {}, 'empty parsed partially url');
 
 # dumb HTTP client: https://github.com/miyagawa/Plack/issues/213
 $req = <<"EOT";
@@ -114,7 +115,7 @@ is_deeply(\%env, {
     QUERY_STRING   => '',
     SCRIPT_NAME     => '',
     SERVER_PROTOCOL => 'HTTP/1.0',
-});
+}, 'expected parsed url fragment');
 
 $req = <<"EOT";
 GET /a/b%23c HTTP/1.0\r
@@ -130,7 +131,7 @@ is_deeply(\%env, {
     QUERY_STRING   => '',
     SCRIPT_NAME     => '',
     SERVER_PROTOCOL => 'HTTP/1.0',
-});
+}, 'expected parsed url');
 
 $req = <<"EOT";
 GET /a/b?c=d#e HTTP/1.0\r
@@ -146,4 +147,6 @@ is_deeply(\%env, {
     QUERY_STRING   => 'c=d',
     SCRIPT_NAME     => '',
     SERVER_PROTOCOL => 'HTTP/1.0',
-});
+}, 'fragment after query string');
+
+done_testing();

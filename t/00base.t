@@ -1,7 +1,10 @@
-use Test::More tests => 1;
+use strict;
+use warnings;
 
-BEGIN {
-    use_ok('HTTP::Parser::XS');
-}
-diag "Testing HTTP::Parser::XS/$HTTP::Parser::XS::VERSION",
-     " ($HTTP::Parser::XS::BACKEND)";
+use Test::More 'no_plan';
+
+BEGIN { use_ok('PicoHttpParser::XS') };
+
+diag "Testing PicoHttpParser::XS/$PicoHttpParser::XS::VERSION";
+
+done_testing();
