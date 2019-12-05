@@ -4,7 +4,6 @@
 /META.json
 /MYMETA.*
 *.o
-*.c
 *.pm.tdy
 *.bs
 *.BAK
@@ -35,3 +34,4 @@ inc/
 /MANIFEST.bak
 /pm_to_blib
 /*.zip
+XS.c
