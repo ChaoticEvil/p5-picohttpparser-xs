@@ -30,53 +30,60 @@ require XSLoader;
 XSLoader::load('PicoHttpParser::XS', $VERSION);
 
 1;
+
 __END__
+
+=encoding UTF-8
 
 =head1 NAME
 
-PicoHttpParser::XS - Perl extension for blah blah blah
-
-=head1 SYNOPSIS
-
-  use PicoHttpParser::XS;
-  blah blah blah
+PicoHttpParser::XS - ...
 
 =head1 DESCRIPTION
 
-Stub documentation for PicoHttpParser::XS, created by h2xs. It looks like the
-author of the extension was negligent enough to leave the stub
-unedited.
-
-Blah blah blah.
-
-=head2 EXPORT
-
-None by default.
-
-
-
-=head1 SEE ALSO
-
-Mention other useful documentation such as the documentation of
-related modules or operating system documentation (such as man pages
-in UNIX), or any relevant external documentation such as RFCs or
-standards.
-
-If you have a mailing list set up for your module, mention it here.
-
-If you have a web site set up for your module, mention it here.
+PicoHttpParser::XS - ...
 
 =head1 AUTHOR
 
-peter, E<lt>peter@localE<gt>
+Peter P. Neuromantic <p.brovchenko@protonmail.com>
 
-=head1 COPYRIGHT AND LICENSE
+=head1 SYNOPSIS
 
-Copyright (C) 2019 by peter
+  use PicoHttpParser::XS qw(parse_response HEADERS_AS_HASHREF);
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself, either Perl version 5.30.0 or,
-at your option, any later version of Perl 5 you may have available.
+  my ($ret, $minor_version, $status, $msg, $headers) = parse_response($http_buf, HEADERS_AS_HASHREF);
 
+=head1 FUNCTIONS
+
+=head2 parse_request($;$)
+
+...
+
+=cut
+
+=head2 parse_response($;$)
+
+...
+
+=over 20
+
+=item $_[0]->{width}  - destination width
+
+=item $_[0]->{height} - destination height
+
+=item $_[0]->{src}    - path to the source image
+
+=item $_[0]->{dst}    - path to the destionation result image
+
+=back
+
+=head1 LICENSE AND COPYRIGHT
+
+BSD 3-Clause License
+
+Copyright (c) 2018-2020 Peter P. Neuromantic E<lt>p.brovchenko@protonmail.comE<gt>
+All rights reserved.
+
+See LICENSE file for more information.
 
 =cut
