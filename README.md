@@ -1,5 +1,8 @@
 # PicoHttpParser::XS
 
+[![Build Status](https://travis-ci.com/ChaoticEvil/p5-picohttpparser-xs.svg?branch=master)](https://travis-ci.com/ChaoticEvil/p5-picohttpparser-xs)
+[![Coverage Status](https://coveralls.io/repos/github/ChaoticEvil/p5-picohttpparser-xs/badge.svg?branch=master)](https://coveralls.io/github/ChaoticEvil/p5-picohttpparser-xs?branch=master)
+
 PicoHttpParser::XS - ...
 
 ## Changes to HTTP::Parser::XS
